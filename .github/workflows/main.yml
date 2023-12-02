@@ -4,7 +4,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   # Build 阶段，用于构建 Maven 项目
