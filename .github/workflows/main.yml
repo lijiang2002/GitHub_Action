@@ -1,3 +1,10 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - master
+      
 jobs:
   develop_build:
     runs-on: ubuntu-latest
