@@ -9,7 +9,7 @@ jobs:
   develop_build:
     runs-on: ubuntu-latest
     steps:
-      - name: 拉取最新提交的代码
+      - name: 拉取最新提交
         uses: actions/checkout@v3
 
       - name: 设置jdk
@@ -22,7 +22,7 @@ jobs:
       - name: 项目打包
         run: mvn -B package
 
-      - name: 上传jar包和启动脚本到服务器中
+      - name: 部署至服务器
         run: sshpass -p ${{ secrets.SERVER_PASSWORD }} scp -r -o StrictHostKeyChecking=no ./target/Github_Action-0.0.1-SNAPSHOT.jar  ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/Users/lijiang/Documents
 
       - name: 启动项目
