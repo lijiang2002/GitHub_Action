@@ -22,10 +22,6 @@ jobs:
     - name: Build and test with Maven
       run: mvn clean install
     
-    - name: Copy JAR file to server
-      run: |
-        cp target/Github_Action-0.0.1-SNAPSHOT.jar /Users/lijiang/Documents
-        
     - name: SSH into server
       uses: appleboy/ssh-action@master
       with:
@@ -33,6 +29,10 @@ jobs:
         USERNAME: ${{ secrets.SERVER_USERNAME }}
         PASSWORD: ${{ secrets.SERVER_PASSWORD }}
         PORT: ${{ secrets.SERVER_PORT }}
+        
+    - name: Copy JAR file to server
+      run: |
+        cp target/Github_Action-0.0.1-SNAPSHOT.jar /Users/lijiang/Documents
         
     - name: Deploy JAR file to server
       run: |
