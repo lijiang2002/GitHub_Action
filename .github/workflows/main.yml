@@ -3,27 +3,38 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - master
-      
+      - main
+
 jobs:
-  develop_build:
-    runs-on: ubuntu-latest
+  build_and_deploy:
+    runs-on: macos-latest
+
     steps:
-      - name: 拉取最新提交的代码
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: 设置jdk
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '11'
-          cache: 'maven'
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
 
-      - name: 项目打包
-        run: mvn -B package
+    - name: Build and test with Maven
+      run: mvn clean install
 
-      - name: 上传jar包和启动脚本到服务器中
-        run: sshpass -p ${{ secrets.SERVER_PASSWORD }} scp -r -o StrictHostKeyChecking=no ./target/Github_Action-0.0.1-SNAPSHOT.jar ./run.sh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/Users/lijiang/Documents
+    - name: Copy JAR file to server
+      run: |
+        cp target/your-springboot-app.jar /path/to/your/server/directory/
 
-      - name: 启动项目
-        run: sshpass -p ${{ secrets.SERVER_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} "cd /Users/lijiang/Documents && java -jar Github_Action-0.0.1-SNAPSHOT.jar"
+    - name: SSH into server
+      uses: appleboy/ssh-action@master
+      with:
+        HOST: ${{ secrets.SERVER_IP }}
+        USERNAME: ${{ secrets.SERVER_USERNAME }}
+        PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+        PORT: ${{ secrets.SERVER_PORT }}
+
+    - name: Deploy JAR file to server
+      run: |
+        cd /path/to/your/server/directory/
+        sudo java -jar your-springboot-app.jar &
