@@ -21,6 +21,8 @@ jobs:
 
       - name: 项目打包
         run: mvn -B package
+      - name: 删除旧的jar包以及运行脚本
+        run: sshpass -p ${{ secrets.SERVER_PASSWORD }} scp -r -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} "cd /Users/lijiang/Documents && rm -rf ./Github_Action-0.0.1-SNAPSHOT.jar"
 
       - name: 部署至服务器
         run: sshpass -p ${{ secrets.SERVER_PASSWORD }} scp -r -o StrictHostKeyChecking=no ./target/Github_Action-0.0.1-SNAPSHOT.jar  ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }}:/Users/lijiang/Documents
